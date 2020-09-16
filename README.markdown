@@ -34,6 +34,21 @@ A barebones go client for interacting with [Confluent's KSQL][ksql]
 	}
 ```
 
+#### List all Connectors
+
+```go
+	c := ksql.NewClient("http://localhost:8088")
+	log.Println("=>>> Connectors")
+	connectors, err := c.ListConnectors()
+	if err != nil {
+		log.Fatal(err)
+	}
+	for i, v := range connectors {
+		log.Printf("%s connector %d: %s", v.Type, i, v.Name)
+	}
+
+```
+
 #### Query stream
 
 ```go

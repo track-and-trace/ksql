@@ -95,6 +95,21 @@ func (c *Client) ListTables() ([]Table, error) {
 	return resp[0].Tables, nil
 }
 
+// ListConnectors returns a slice of available tables
+func (c *Client) ListConnectors() ([]Connector, error) {
+	r := Request{
+		KSQL: "LIST Connectors;",
+	}
+	resp, err := c.Do(r)
+	if err != nil {
+		return nil, err
+	}
+	if len(resp) < 1 {
+		return nil, errors.New("Didn't get enough responses")
+	}
+	return resp[0].Connectors, nil
+}
+
 // Do provides a way for running queries against the `/ksql` endpoint
 func (c *Client) Do(r Request) (Response, error) {
 	res, err := c.ksqlRequest(r)

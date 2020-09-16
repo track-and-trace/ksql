@@ -26,27 +26,37 @@ func main() {
 		log.Printf("Table %d: %s", i, v.Name)
 	}
 
-	log.Println("=>>> Limited Query:")
-	sql := "SELECT pageid FROM pageviews_original LIMIT 3;"
-	q, err := c.LimitQuery(ksql.Request{KSQL: sql})
+	log.Println("=>>> Connectors")
+	connectors, err := c.ListConnectors()
 	if err != nil {
 		log.Fatal(err)
 	}
-	for i, v := range q {
-		if v.Row != nil {
-			log.Printf("%d:%v\n", i, v.Row)
-		}
+	for i, v := range connectors {
+		log.Printf("%s connector %d: %s", v.Type, i, v.Name)
 	}
-	log.Println("=>>> Forever Query :")
-	ch := make(chan *ksql.QueryResponse)
-	go c.Query(ksql.Request{KSQL: "SELECT pageid FROM pageviews_original;"}, ch)
-	if err != nil {
-		log.Fatal(err)
-	}
-	for {
-		select {
-		case msg := <-ch:
-			log.Println(msg.Row)
-		}
-	}
+
+	// NOTE: The following depends on objects defined in your ksql-server
+	// log.Println("=>>> Limited Query:")
+	// sql := "SELECT pageid FROM pageviews_original LIMIT 3;"
+	// q, err := c.LimitQuery(ksql.Request{KSQL: sql})
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// for i, v := range q {
+	// 	if v.Row != nil {
+	// 		log.Printf("%d:%v\n", i, v.Row)
+	// 	}
+	// }
+	// log.Println("=>>> Forever Query :")
+	// ch := make(chan *ksql.QueryResponse)
+	// go c.Query(ksql.Request{KSQL: "SELECT pageid FROM pageviews_original;"}, ch)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// for {
+	// 	select {
+	// 	case msg := <-ch:
+	// 		log.Println(msg.Row)
+	// 	}
+	// }
 }
