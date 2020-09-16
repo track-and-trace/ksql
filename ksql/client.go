@@ -111,7 +111,7 @@ func (c *Client) ListConnectors() ([]Connector, error) {
 }
 
 // Do provides a way for running queries against the `/ksql` endpoint
-func (c *Client) Do(r Request) (Response, error) {
+func (c *Client) Do(r Request) ([]Response, error) {
 	res, err := c.ksqlRequest(r)
 	if err != nil {
 		return nil, err
@@ -124,11 +124,16 @@ func (c *Client) Do(r Request) (Response, error) {
 		return nil, err
 	}
 
-	resp := Response{}
+	resp := []Response{}
 	err = json.Unmarshal(body, &resp)
 
 	if err != nil {
-		return nil, err
+		// Really stupid from kSQL implementation that it might return single object
+		response := Response{}
+		if err2 := json.Unmarshal(body, &response); err2 != nil {
+			return nil, fmt.Errorf("failed to deserialize %s into []Response or Response object: %v %v", body, err, err2)
+		}
+		resp = append(resp, response)
 	}
 
 	if resp[0].ErrorCode != 0 {

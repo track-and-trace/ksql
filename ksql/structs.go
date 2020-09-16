@@ -19,7 +19,7 @@ type Request struct {
 	streamPropertiesName string
 }
 
-type Response []struct {
+type Response struct {
 	Type          string `json:"@type"`
 	StatementText string `json:"statementText"`
 
