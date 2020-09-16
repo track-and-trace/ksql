@@ -30,11 +30,12 @@ type Response []struct {
 	// plus entities... list of something
 
 	// response to various queries
-	Streams   []Stream   `json:"streams"`
-	Tables    []Table    `json:"tables"`
-	Queries   []Query    `json:"queries"`
-	Topics    []Topic    `json:"topics"`
-	Functions []Function `json:"functions"`
+	Streams    []Stream    `json:"streams"`
+	Tables     []Table     `json:"tables"`
+	Queries    []Query     `json:"queries"`
+	Topics     []Topic     `json:"topics"`
+	Functions  []Function  `json:"functions"`
+	Connectors []Connector `json:"connectors"`
 
 	// responses to 'show properties'
 	Properties            map[string]string `json:"properties"`
@@ -57,6 +58,14 @@ type Table struct {
 	Topic    string `json:"topic"`
 	Format   string `json:"format"`
 	Windowed bool   `json:"isWindowed"`
+}
+
+type Connector struct {
+	// {"name":"simple-elasticsearch-connector","type":"sink","className":"io.confluent.connect.elasticsearch.ElasticsearchSinkConnector","state":"RUNNING (1/1 tasks RUNNING)"}
+	Name      string `json:"name"`
+	Type      string `json:"type"`
+	ClassName string `json:"className"`
+	State     string `json:"state"`
 }
 
 // Query is an item in a 'SHOW QUERIES' response
